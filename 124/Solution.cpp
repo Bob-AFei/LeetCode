@@ -1,15 +1,4 @@
 
-/** 
- * 给定一个非空二叉树，返回其最大路径和。
- * https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/
- **/
-
-
-/**
- * Definition for a binary tree node. 
- */
-
-
 #include <climits>
 #include <algorithm>
 
