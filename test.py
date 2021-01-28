@@ -1,36 +1,32 @@
-# -*- coding: utf-8 -*-next_loop
-# @Author: Denghui Zhao
-# @Date:   2021-01-27 14:50:15
-# @Last Modified by:   Denghui Zhao
-# @Last Modified time: 2021-01-27 16:26:05
-
-
-
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
 class Solution:
 
-    def levelOrder(self, root):
-        self.ans = []
-        if root == None: return self.ans
-        current_loop = []
-        current_loop += [root]
-        self.bfs(current_loop)
-        return self.ans
+	def numIslands(self, grid) -> int:
+		nums = 0
+		self.grid = grid
 
-    def bfs (self, current_loop):
-        next_loop = []
-        this_level = []
+		self.w = len(grid)
+		self.h = len(grid[0])
 
-        for node in current_loop:
-            this_level += [node.val]
-            if not node.left == None: next_loop += [node.left]
-            if not node.right == None: next_loop += [node.right]
+		for i in range(self.w):
+			for j in range(self.h):
+				if grid[i][j] == "1":
+					nums += 1
+					self.traverseIslends(i,j)
+		return nums
 
-        self.ans += [this_level]
-        if len(next_loop) > 0 : self.bfs (next_loop)
+	def traverseIslends (self, i, j):
+		grid[i][j] = 0
+		if i > 0 and grid[i-1][j] == "1": self.traverseIslends(i-1, j)
+		if i < self.w-1 and grid[i+1][j] == "1": self.traverseIslends(i+1, j)
+		if j > 0 and grid[i][j-1] == "1": self.traverseIslends(i, j-1)
+		if j < self.h-1 and grid[i][j+1] == "1": self.traverseIslends(i, j+1)
+
+grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+
+ans = Solution().numIslands(grid)
+print(ans)
