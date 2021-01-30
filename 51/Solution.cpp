@@ -14,118 +14,125 @@ using namespace std;
 class Solution {
 
 private:
-
 	vector <vector <string> > ans;
-	int N;
 
-public:
 
-	vector<vector<string>> solveNQueens(int n) 
+	vector <string> initial_ans (int n)
 	{
-		// return the answer 
-		N = n;
-
-		// number of rest queens
-		int res_Q = n;
-
-		// this is the char
-		char track [n][n];
-
-
+		string temp = "";
 		for (int i = 0; i < n; ++i)
 		{
-			for (int j = 0; j < n; ++j)
-			{
-				track[i][j] = '.';
-			}
+			temp += '.';
 		}
 
 
+		vector <string> single_ans; 
+
 		for (int i = 0; i < n; ++i)
 		{
-			for (int j = 0; j < n; ++j)
-				cout << track[i][j];
-			cout << ";" << endl;
+			single_ans.push_back(temp);
 		}
 
-		return this->ans;
+		return single_ans;
+	}
+
+
+	// 检查目前的解决方案是否合法
+	bool is_valid(vector<string> single_ans, int row, int col, int total)
+	{
+		// 检查上方
+		for (int i = row-1; i>=0 ; --i)
+		{
+			if (single_ans.at(i)[col] == 'Q')
+				return false;
+		}
+
+		// 检查左上
+		for (int i=row-1,j=col-1; i>=0&&j>=0; --i,--j)
+		{
+			if(single_ans.at(i)[j] == 'Q')
+				return false;
+		}
+
+		// 检查右上
+		for (int i=row-1,j=col+1; i>=0&&j<total; --i,++j)
+		{
+
+			cout << i << "TEST" << j << endl;
+			if(single_ans.at(i)[j] == 'Q')
+				return false;
+		}
+
+		return true;
 	}
 
 
 
-	bool backtrack(char track, int res_Q, int row)
+
+	void backtrack (vector <string> single_ans, int resQ,int row,int total)
 	{
-		if (res_Q == 0)
+		if (resQ == 0)
 		{
-			save_ans(track);
+			ans.push_back(single_ans);
+			return;
 		}
 
-		for (int col = 0; col < N; ++col)
+		for (int col = 0; col < total; ++col)
 		{
-			if (!isValid(track, row, col))
+			
+			// 如果不合法，直接进行下一轮实验
+			if (! is_valid(single_ans, row, col, total))
 			{
 				continue;
 			}
-
-			track[row, col] = 'Q';
-			backtrack(track, res_Q-1, row+1);
-			track[row, col] = '.';
+			// 如果合法，检查下一行
+			else
+			{
+				single_ans.at(row)[col] = 'Q';
+				backtrack(single_ans,resQ-1, row+1,total);
+				// 完成后撤销选择
+				single_ans.at(row)[col] = '.';
+			}
 		}
-		return true;
 	}
 
 
 
-
-	void save_ans(char track)
+	void check_answer()
 	{
-		vector <string> one_ans;
-
-		for (int i = 0; i < N; ++i)
+		for (vector <string> single_ans:  ans)
 		{
-			string temp = "";
-			for (int j = 0; j < N; ++j)
-				temp += track[i][j];
-			one_ans.push_back(temp);
+			for (string _ans : single_ans)
+			{
+				cout << _ans << endl;
+			}
+			cout << endl;
 		}
-		ans.push_back(one_ans);
 	}
 
 
 
-
-	bool isValid(char track, int row, int col)
+public:
+	vector <vector <string> > solveNQueens(int n)
 	{
-		// check front
-		for (int i = row; i >= 0; --i)
-		{
-			if (track[i][col] == 'Q') return false;
-		}
+		vector <string> single_ans = initial_ans(n);
+		// 还剩余这么多个皇后
+		int resQ = n;
+		// 目前在第几层
+		int row  = 0;
 
-
-		// check left-front
-		for (int i=row,j=col; i>=0,j>=0; --i,--j)
-		{
-			if (track[i][j] == 'Q') return false;
-		}
-
-		// check right-front
-		for (int i=row,j=col; i>=0,j<N; --i,++j)
-		{
-			if (track[i][j] == 'Q') return false;
-		}
-
-		return true;
+		backtrack (single_ans, resQ, row, n);
+		
+		// check_answer();
+		return ans;
 	}
-
-
-
-
 };
 
 
-int main(int argc, char const *argv[])
-{
-	Solution().solveNQueens(11);
-	return 0;
-}
+
+
+// int main(int argc, char const *argv[])
+// {
+// 	Solution().solveQueens(5);
+// 	return 0;
+// }

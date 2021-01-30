@@ -1,8 +1,8 @@
 // *
 //  * Definition for a binary tree node.
 
-#include <set>
-
+#include <vector>
+using namespace std;
 
 
 struct TreeNode {
@@ -19,24 +19,26 @@ struct TreeNode {
 class Solution {
 
 private:
-    int min_depth; 
+    int min_depth = 1; 
 
-    void find_min (vector<TreeNode> round)
+    void find_min (vector <TreeNode*> round)
     {
+        vector <TreeNode*> new_round;
 
-        vector <TreeNode> new_round;
-
-        min_depth ++;
-        for(TreeNode node : round)
+        for(TreeNode* node : round)
         {
-            if (node.left != nullptr)
-                new_round.push_back(node.left);
-            if (node.right != nullptr)
-                new_round.push_back(node.right);
+            if (node->left == nullptr && node->right == nullptr)
+                return;
+
+            if (node->left != nullptr)
+                new_round.push_back(node->left);
+            
+            if (node->right != nullptr)
+                new_round.push_back(node->right);
         }
 
+        min_depth ++;
         return find_min(new_round);
-
     }
 
 
@@ -46,9 +48,13 @@ public:
 
     int minDepth(TreeNode* root) 
     {
-        vector <TreeNode> new_round;
+        vector <TreeNode*> new_round;
+        
+        if (root == nullptr) return 0;
+        
         new_round.push_back(root);
         find_min(new_round);
+
         return min_depth;
     }
 
